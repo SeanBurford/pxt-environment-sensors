@@ -8,7 +8,7 @@ control.assert(reading.pressure == 98367,
                "pressure " + reading.pressure + " != 98367");
 
 let ms5803 = new MS5803();
-// ms5803.init(0x77);
-// let result = ms5803.query();
-// control.assert(result.temperature == 2000,
-//                "temperature " + result.temperature + " != 2000");
+ms5803.init();
+let result = ms5803.query();
+control.assert(result.temperature == 2000,
+               "temperature " + result.temperature + " != 2000");

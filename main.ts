@@ -45,6 +45,7 @@ class MS5803 {
         this.cmdConvD2OSR256 = 0x57;
         this.cmdRead = 0xA0;
         this.cmdReset = 0x1E;
+        this.coefficients = [];
     }
 
     private cmd(command: number) {
@@ -52,6 +53,7 @@ class MS5803 {
     }
 
     public reset() {
+        control.assert(this.cmdReset == 0x1E, "Class not initialized");
         for (let attempt = 0; attempt < 3; attempt++) {
             this.cmd(this.cmdReset);
             basic.pause(3);
