@@ -1,10 +1,17 @@
+/**
+ * A reading from the MS5803 pressure sensor.
+ */
 class MS5803Reading {
+    //% block="Raw D1"
     readonly D1: number;
+    //% block="Raw D2"
     readonly D2: number;
     readonly dT: number;
     readonly off: number;
     readonly sens: number;
+    //% block="Temperature (Celsius)"
     readonly temperature: number;
+    //% block="Pressure (Pascals)"
     readonly pressure: number;
 
     constructor(D1: number, D2: number, coefficients: number[]) {
@@ -17,6 +24,8 @@ class MS5803Reading {
         this.pressure = Math.trunc((D1 * (this.sens / 2097152) - this.off) / 32768);
     }
 
+    //% blockId="ms5803reading_serial" block="Output reading to serial"
+    //% advanced=true
     public toSerial() {
         serial.writeValue("D1", this.D1);
         serial.writeValue("D2", this.D2);
@@ -26,8 +35,21 @@ class MS5803Reading {
     }
 }
 
+/**
+ * I2C addresses that the MS5803 can appear at.
+ */
+enum MS5803Addr {
+    //% block="I2C 0x76 CSB high"
+    I2C76 = 0x76,
+    //% block="I2C 0x77 CSB low"
+    I2C77 = 0x77,
+}
+
+/**
+ * The MS5803 pressure and temperature sensor.
+ */
 class MS5803 {
-    i2cAddr: number;
+    i2cAddr: MS5803Addr;
     coefficients: number[];
     readonly debug: number;
 
@@ -37,7 +59,7 @@ class MS5803 {
     readonly cmdRead: number;
     readonly cmdReset: number;
 
-    constructor(i2cAddr: number = 0x77) {
+    constructor(i2cAddr: MS5803Addr = MS5803Addr.I2C77) {
         this.i2cAddr = i2cAddr;
         this.debug = 1;
         this.cmdAdcRead = 0x00;
@@ -52,6 +74,11 @@ class MS5803 {
         pins.i2cWriteNumber(this.i2cAddr, command, NumberFormat.UInt8BE, false);
     }
 
+    /**
+     * Send a reset command (init does this for you too)
+     */
+    //% blockId="ms5803_reset" block="reset"
+    //% advanced=true
     public reset() {
         control.assert(this.cmdReset == 0x1E, "Class not initialized");
         for (let attempt = 0; attempt < 3; attempt++) {
@@ -80,11 +107,19 @@ class MS5803 {
         return Math.trunc(adc / 256);
     }
 
+    /**
+     * Prepare the MS5803 for use.
+     */
+    //% blockId="ms5803_init" block="init"
     public init() {
         this.reset();
         this.promRead();
     }
 
+    /**
+     * Request a reading from the MS5803.
+     */
+    //% blockId="ms5803_query" block="query"
     public query(): MS5803Reading {
         if (this.coefficients.length == 0) {
             this.init();
