@@ -29,6 +29,7 @@ namespace MS5803 {
         constructor(D1: number, D2: number, coefficients: number[]) {
             this.D1 = D1;
             this.D2 = D2;
+            // TODO: Support other devices than the MS5803-05.
             this.dT = D2 - coefficients[5] * 256;
             this.off = coefficients[2] * 262144 + coefficients[4] * this.dT / 32;
             this.sens = coefficients[1] * 131072 + coefficients[3] * this.dT / 128;
@@ -73,6 +74,7 @@ namespace MS5803 {
             this.i2cAddr = i2cAddr;
             this.debug = 1;
             this.cmdAdcRead = 0x00;
+            // TODO: Support other oversample rates.
             this.cmdConvD1OSR256 = 0x47;
             this.cmdConvD2OSR256 = 0x57;
             this.cmdRead = 0xA0;
@@ -135,7 +137,7 @@ namespace MS5803 {
          * Request a reading from the MS5803.
          */
         //% blockId="ms5803_query"
-        //% block="%ms5803|Pressure and temperature"
+        //% block="%ms5803|current pressure and temperature"
         //% blockSetVariable=ms5803reading
         //% group="MS5803"
         //% weight=70
