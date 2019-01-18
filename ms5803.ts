@@ -1,5 +1,3 @@
-//% block="Environment Sensors"
-//% groups=["Devices", "MS5803"]
 //% icon="\uf2c8" color="#138D75"
 namespace MS5803 {
     /**
@@ -7,22 +5,18 @@ namespace MS5803 {
      */
     export class Reading {
         //% block="%ms5803reading|D1"
-        //% group="MS5803"
         //% weight=11
         readonly D1: number;
         //% block="%ms5803reading|D2"
-        //% group="MS5803"
         //% weight=10
         readonly D2: number;
         readonly dT: number;
         readonly off: number;
         readonly sens: number;
         //% block="%ms5803reading|temperature"
-        //% group="MS5803"
         //% weight=21
         readonly temperature: number;
         //% block="%ms5803reading|pressure"
-        //% group="MS5803"
         //% weight=20
         readonly pressure: number;
 
@@ -89,10 +83,6 @@ namespace MS5803 {
         /**
          * Send a reset command (init does this for you too)
          */
-        //% blockId="ms5803_reset"
-        //% block="%ms5803|Reset"
-        //% group="MS5803"
-        //% weight=1
         public reset() {
             control.assert(this.cmdReset == 0x1E, "Class not initialized");
             for (let attempt = 0; attempt < 3; attempt++) {
@@ -124,10 +114,6 @@ namespace MS5803 {
         /**
          * Prepare the MS5803 for use.
          */
-        //% blockId="ms5803_init"
-        //% block="%ms5803|Initialize"
-        //% group="MS5803"
-        //% weight=1
         public init() {
             this.reset();
             this.promRead();
@@ -139,7 +125,6 @@ namespace MS5803 {
         //% blockId="ms5803_query"
         //% block="%ms5803|current pressure and temperature"
         //% blockSetVariable=ms5803reading
-        //% group="MS5803"
         //% weight=70
         public query(): Reading {
             if (this.coefficients.length == 0) {
@@ -166,7 +151,6 @@ namespace MS5803 {
     //% blockId="ms5803_create"
     //% block="MS5803 at address %i2caddr"
     //% blockSetVariable=ms5803
-    //% group="Devices"
     //% weight=90
     export function create(i2caddr: Addr): Device {
         let device = new Device(i2caddr);
