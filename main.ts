@@ -50,6 +50,7 @@ namespace MPRLS {
             pins.i2cWriteNumber(this.i2cAddr, 0xAA000000, NumberFormat.UInt32BE, false);
 
             // Monitor the status byte
+            basic.pause(10);
             let attempt = 0;
             for (attempt = 0; attempt < 50; attempt++) {
                 let stat = pins.i2cReadNumber(this.i2cAddr, NumberFormat.UInt8BE, false);
